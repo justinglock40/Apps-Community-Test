@@ -9,11 +9,9 @@
     - name: 'Set Known Facts'
       set_fact:
         pgrole: 'nginx'
-        intport: '82'
-        extport:  '82'
-        intport1: '4343'
-        extport1: '4343'
-        image: 'nginx'
+        intport: '80'
+        extport: '8888'
+        image: 'schmunk42/nginx-redirect'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
@@ -40,17 +38,16 @@
     - name: 'Setting {{pgrole}} Volumes'
       set_fact:
         pg_volumes:
-          - '/opt/appdata/{{pgrole}}/config:/etc/nginx'
+          - '/opt/appdata/{{pgrole}}:/etc'
           - '{{path.stdout}}:{{path.stdout}}'
           - '/etc/localtime:/etc/localtime:ro'
-          - '/opt/appdata/{{pgrole}}/certs:/etc/ssl/private'
-          - '/opt/appdata/{{pgrole}}/config/nginx.conf:/etc/nginx/nginx.conf'
 
     - name: 'Setting {{pgrole}} ENV'
       set_fact:
         pg_env:
-          PUID: '1000' 
+          PUID: '1000'
           PGID: '1000'
+          SERVER_REDIRECT: 'http://localhost:3468/DKfBIzDMcIksxQk9LnrwriKu5NmXE50V'
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'
@@ -59,8 +56,7 @@
         image: '{{image}}'
         pull: yes
         published_ports:
-          - '82:82/tcp'
-          - '4343:4343/tcp'
+          - '{{ports.stdout}}{{extport}}:{{intport}}'
         volumes: '{{pg_volumes}}'
         env: '{{pg_env}}'
         restart_policy: unless-stopped
