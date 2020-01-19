@@ -40,7 +40,7 @@
         pg_volumes:
           - '/mnt/unionfs/:/data'
           - '/opt/appdata/{{pgrole}}/config:/config'
-          - '/config/Library/Application Support/Plex Media Server/Plug-in Support/Databases/:/plexdB'
+          - '/opt/appdata/plex/config/Library/Application Support/Plex Media Server/Plug-in Support/Databases/:/plexDb'
           - '{{path.stdout}}:{{path.stdout}}'
           - '/etc/localtime:/etc/localtime:ro'
           - '/var/run/docker.sock:/var/run/docker.sock'
